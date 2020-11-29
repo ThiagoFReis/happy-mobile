@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import { RectButton } from 'react-native-gesture-handler';
 
 import mapMarker from '../images/map-marker.png';
@@ -19,11 +19,11 @@ export default function OrphanagesMap() {
     const [orphanages, setOrphanages] = useState<Orphanage[]>([]);
     const navigation = useNavigation();
 
-    useEffect(() => {
-      api.get('/orphanages').then(response => {
+    useFocusEffect(() => {
+      api.get('orphanages').then(response => {
         setOrphanages(response.data);
       });
-    }, []);
+    });
     
     function handleNavigateToOrphanageDetails(id: number) {
         navigation.navigate('OrphanageDetails', { id });
@@ -71,7 +71,7 @@ export default function OrphanagesMap() {
       </MapView>
 
       <View style={styles.footer}>
-          <Text style={styles.footerText}>2 orfanatos encontrados</Text>
+      <Text style={styles.footerText}>{orphanages.length} orfanatos encontrados</Text>
 
           <RectButton style={styles.createOrphanageButton} onPress={handleNavigateToCreateOrphanage}>
             <Feather name="plus" size={20} color="#FFF"/>
